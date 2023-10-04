@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Introduzca 3 números</h1>
+    <label>Numero 1</label>
+    <input type="text" id="cajaNum1"/><br>
+    <label>Numero 2</label>
+    <input type="text" id="cajaNum2"/><br>
+    <label>Numero 3</label>
+    <input type="text" id="cajaNum3"/><br>
+
+    <button id="mostrarNums">Mostrar números</button>
+
+    <h2 id="resultado"></h2>
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#mostrarNums').click(function(){
+                let num1 = parseInt($('#cajaNum1').val());
+                let num2 = parseInt($('#cajaNum2').val());
+                let num3 = parseInt($('#cajaNum3').val());
+                let numMayor;
+                let numMenor;
+                let numIntermedio;
+
+                //Obtenemos el numero mayor comparando
+
+                if (num1 >= num2 && num1 >= num3) {
+                    numMayor = num1;
+                }else if(num2 >= num1 && num2 >= num3){
+                    numMayor = num2;
+                }else if(num3 >= num1 && num3 >= num2){
+                    numMayor = num3;
+                }
+
+                //Obtenemos el numero menor comparando
+
+                if (num1 <= num2 && num1 <= num3) {
+                    numMenor = num1;
+                }else if(num2 <= num1 && num2 <= num3){
+                    numMenor = num2;
+                }else if(num3 <= num1 && num3 <= num2){
+                    numMenor = num3;
+                }
+
+                //Obtenemos el numero intermedio
+
+                let suma = num1 + num2 + num3;
+                numIntermedio = suma - numMayor - numMenor;
+
+                $('#resultado').text('Mayor: '+ numMayor + ',  Menor: '+ numMenor + ',  Interemedio: ' + numIntermedio)
+            })
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        button{
+            padding: 5px;
+            border-radius: 5px;
+            background-color: transparent;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button id="genera10">Generar 10 botones con nums aleatorios</button>
+    <br><br>
+    <div id="contenedor"></div>
+    <h1 id="suma"></h1>
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#genera10").click(function(){
+                $('#contenedor').text("");
+                for (let i = 0; i < 10; i++) {
+                    let random = parseInt(Math.floor(Math.random() * 20));
+                    let btn = $('<button>',{
+                        'text': 'Num: '+random,
+                        'value': random
+                    });
+                    //btn.text();
+                    $("#contenedor").append(btn);
+                    btn.click(function(){
+                        let num = parseInt($(this).val());
+                        let sumaNums = parseInt($("#suma").text())
+                        sumaNums+=num;
+                        $("#suma").text(sumaNums);
+                        console.log(sumaNums + ' es de tipo: ' + typeof(sumaNums));
+                    })
+                }
+            })
+        })
+    </script>
+</body>
+</html>

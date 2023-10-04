@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimerosPasosJQUERY</title>
+    <!-- Para poner y quitar comentarios: CTRL + K + C -->
+    <style>
+        .blue{
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>Selectores Jquery</h1>
+    <button id="boton1">Pulsar para algo...</button>
+    <h1 class="blue">Soy azul</h1>
+    <button class="blue">Soy un boton azul</button>
+    <p>Aprendiendo Jquery 1</p>
+    <p>Aprendiendo Jquery 2</p>
+    <p>Aprendiendo Jquery 3</p>
+
+    <!-- Referencia a la libreria de JQUERY.JS -->
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        //Primera instruccion que debemos incluir, es cargar
+        //los componentes al carar la pagina
+        $(document).ready(function(){
+            // alert('Funcionando');
+            // Dentro de Jquery podemos realizar acciones.
+            // Ejemplo: Ocultar algun elemento
+            $('h1').hide();
+            // Selector de id
+            $('#boton1').hide();
+            // Podemos asociar eventos
+            $('p').click(function(){
+                // Imprescindible para el front:
+                // Visualizar acciones en el explorador web
+                console.log('Mostrando mensajes en Web...');
+                $('h1').show();
+
+                // Tenemos una palabra clave 'this', dicha palabra accede al objeto
+                // que ha realizado la llamada
+                // $('p').hide();
+                $(this).hide();
+
+            })
+        })
+    </script>
+</body>
+</html>

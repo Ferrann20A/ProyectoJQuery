@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <h1>Genrerar controles dinámicos</h1>
+    <input type="text" id="cajaTexto"/>
+    <button id="botonGenerar">Genera control</button>
+    <div id="contenedor"></div>
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function(){ 
+            $('#botonGenerar').click(function(){
+                // Creamos un parrafo por cada pulsacion en el boton
+                let texto = $('#cajaTexto').val();
+                // Necesito que nuestros controles dinamicos tengan eventos, por lo que los creamos con jquery
+                let parrafo = $("<p>",{"text" : texto, "style":"color:blue"});
+                $('#contenedor').append(parrafo);
+                // Necesitamos crear un listener para que, al pulsar sobre 
+                //cualquier parrafo, podamos cambiar su contenido y color de fondo
+                parrafo.click(function(){
+                    // Lo que necesitamos es recuperar el texto de la caja para ponerlo en el parrafo pulsado
+                    let contenido = $('#cajaTexto').val();
+                    $(this).text(contenido);
+                })
+                
+            })
+        })
+    </script>
+</body>
+</html>
