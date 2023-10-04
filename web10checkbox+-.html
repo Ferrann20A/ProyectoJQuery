@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Sumando y restando Checkbox</h1>
+    <input type="range" id="generaCbx" min="1" max="50" value="1">
+    <span id="valorRango"></span>
+    <br><br>
+    <div id="contenedor"></div>
+    <h1 id="resultado">0</h1>
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#generaCbx").change(function(){
+                let numCbx = parseInt($(this).val());
+                $("#valorRango").text(numCbx);
+                $('#contenedor').text("");
+                for (let i = 0; i < numCbx; i++) {
+                    let random = parseInt(Math.floor(Math.random() * 100));
+                    let cbx = $("<input>",{
+                        "type":"checkbox",
+                        "text":random,
+                        "value": random
+                    });
+                    let label = $("<label>",{
+                        "text":random
+                    })
+                    //console.log(cbx);
+                    $("#contenedor").append(cbx);
+                    $("#contenedor").append(label);
+
+                    //Correcion del profesor
+                    // cbx.change(function(){
+                    //     let resultado = parseInt($("#resultado").text());
+                    //     //Debemos preguntar por el valor del checkbox
+                    //     let valor = parseInt($(this).val());
+                    //     if($(this).prop("checked") == true){
+                    //         resultado+= valor;
+                    //     }else{
+                    //         resultado-=valor;
+                    //     }
+                    //     $("#resultado").text(resultado);
+                    // })
+
+                    //Solulcion hecha con EACH: (mirar en el OneNote bien el codigo)
+                    cbx.change(function(){
+                        let resultado = parseInt($("#resultado").text());
+                        $("checkbox").each(function(){
+                            if($(this).prop("checked")){
+
+                            }else{
+
+                            }
+                        })
+                    })
+                    
+                    //hecho por mi
+                    cbx.click(function(){
+                        let valor = parseInt($(this).val());
+                        let resultado = parseInt($("#resultado").text());
+                        if(cbx.prop("checked")){
+                            resultado+=valor;
+                        }else{
+                            resultado-=valor;
+                        }
+                        $("#resultado").text(resultado)
+                    });
+                }
+            })
+        })
+    </script>
+</body>
+</html>
