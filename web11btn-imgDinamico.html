@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        button{
+            width: 150px;
+            margin: 5px;
+        }
+        img{
+            margin: 5px;
+            width: 230px;
+            height: 150px;
+        }
+        #contenedor{
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rango dinamico</h1>
+    <input type="range" id="genera" min="1" max="50" value="1">
+    <span id="valorRango"></span>
+    <br><br>
+    <div id="contenedor"></div>
+
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#genera").change(function(){
+                let valorRango = parseInt($(this).val());
+                $("#valorRango").text(valorRango);
+                $('#contenedor').text("");
+                for (let i = 1; i <= valorRango; i++) {
+                    let btn = $("<button>",{
+                        "text":"Imagen " + i,
+                        "data-num": i,
+                        "id":"btn"+i
+                    });
+                    let img = $("<img>",{
+                        "src":"images/img1.jpeg",
+                        "id":"img"+i
+                    });
+
+                    $("#contenedor").append(btn);
+                    $("#contenedor").append(img);
+
+                    btn.click(function(){
+                        img.attr("src","images/img2.jpeg");
+                    });
+                }
+
+                let br = $("<hr>");
+                $("#contenedor").append(br);
+                
+                // for(let i = 1; i <= valorRango; i++){
+                //     let img = $("<img>",{
+                //         "src":"images/img1.jpeg",
+                //         "id":"img"+i
+                //     });
+                //     $("#contenedor").append(img);
+                // }
+            })
+        })
+    </script>
+</body>
+</html>
