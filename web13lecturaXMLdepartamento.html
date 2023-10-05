@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #tablaDep, tr, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td{
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Departamentos Atributos XML</h1>
+    <button id="btnDep">Cargar departamentos</button>
+    <table id="tablaDep">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Nombre</th>
+                <th>Localidad</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#btnDep").click(function(){
+                $.get("documents/departamentos.xml", function(data){
+                    console.log("Leyendo servicio");
+                    let html = "";
+                    //Necesitamos recuperar cada etiqueta de <DEPT>
+                    $(data).find("DEPT").each(function(){
+                        html += "<tr>";
+                        //Con la etiqueta .attr("ATRIBUTO")
+                        let num = $(this).attr("DEPT_NO");
+                        let nombre = $(this).find("DNOMBRE").first().text();
+                        let localidad = $(this).find("LOC").text();
+                        html += "<td>" + num + "</td>";
+                        html += "<td>" + nombre + "</td>";
+                        html += "<td>" + localidad + "</td>";
+                        html += "</tr>";
+                    });
+                    $("#tablaDep tbody").html(html);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

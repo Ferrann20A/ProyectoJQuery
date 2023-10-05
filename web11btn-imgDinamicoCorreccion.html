@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        img{
+            height: 150px;
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rango dinamico</h1>
+    <label>Seleccione numero de elementos</label>
+    <input type="range" id="rango" min="1" max="50" value="1">
+    <span id="valorRango"></span>
+    <br><br>
+    <div id="contenedorBtns"></div>
+    <div id="contenedorImgs"></div>
+
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#rango").change(function(){
+                let num = parseInt($(this).val());
+                $("#valorRango").text("Elementos generados: "+num);
+                $("#contenedorBtns").text("");
+                $("#contenedorImgs").text("");
+                for (let i = 1; i <= num ; i++) {
+                    let btn = $("<button>",{
+                        "text":"Imagen " + i,
+                        "data-img": i
+                    });
+                    let img = $("<img>",{
+                        "src":"images/img1.jpeg",
+                        "id":"img" + i
+                    });
+                    $("#contenedorBtns").append(btn);
+                    $("#contenedorImgs").append(img);
+                    btn.click(function(){
+                        let id = $(this).data("img");
+                        $("#img"+id).attr("src","images/img2.jpeg");
+                    })
+                }
+            })
+        });
+    </script>
+</body>
+</html>
