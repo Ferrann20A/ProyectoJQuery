@@ -12,6 +12,10 @@
         th, td{
             padding: 5px;
         }
+        .tablas{
+            display: flex;
+            justify-content: space-around;
+        }
     </style>
 </head>
 <body>
@@ -41,82 +45,55 @@
         <input type="text" name="localidadDpt" id="cajaSalario"/>
     </div>
     <hr/>
-    <button id="btnInsert">Insertar</button>
-    <button id="btnUpdate">Update</button>
-    <button id="btnDelete">Delete</button><br/>
-    <hr/>
-    <table id="tablaDoctores">
-        <thead>
-            <tr>
-                <th>IdDoctor</th>
-                <th>Apellido</th>
-                <th>Especialidad</th>
-                <th>Id Hospital</th>
-                <th>Salario</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    <hr/>
-    <div id="especialidades">
-        <span>Especialidades</span>
-        <select id="especialidadesDoctor">
-
-        </select>
+    <div class="tablas">
+        <div id="izq">
+            <button id="btnInsert">Insertar</button>
+            <button id="btnUpdate">Update</button>
+            <button id="btnDelete">Delete</button><br/><br/>
+            <table id="tablaDoctores">
+                <thead>
+                    <tr>
+                        <th>IdDoctor</th>
+                        <th>Apellido</th>
+                        <th>Especialidad</th>
+                        <th>Id Hospital</th>
+                        <th>Salario</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="der">
+            <div id="especialidades">
+                <span>Especialidades</span>
+                <select id="especialidadesDoctor">
+        
+                </select>
+            </div>
+            <br/>
+            <table id="tablaEspecialidades">
+                <thead>
+                    <tr>
+                        <th>IdDoctor</th>
+                        <th>Apellido</th>
+                        <th>Especialidad</th>
+                        <th>Id Hospital</th>
+                        <th>Salario</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
-    <br/>
-    <table id="tablaEspecialidades">
-        <thead>
-            <tr>
-                <th>IdDoctor</th>
-                <th>Apellido</th>
-                <th>Especialidad</th>
-                <th>Id Hospital</th>
-                <th>Salario</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-
-    
 
     <script src="js/jquery-3.7.1.min.js"></script>
     <script>
         let URLDoctores = "https://apicruddoctoresxml.azurewebsites.net/";
         $(document).ready(function(){
-            let request = "api/doctores/especialidades";
-            $.get(URLDoctores + request, function(data){
-                console.log("Aqui entra.....");
-                $(data).find("string").each(function(){
-                    let especialidad = $(this).text();
-                    let opt = $("<option>",{
-                        "text": especialidad,
-                        "value": especialidad
-                    })
-                    $("#especialidadesDoctor").append(opt);
-                });
-            });
+            loadEspecialidades();
+
             $("#especialidadesDoctor").change(function(){
-                let especialidadSeleccionada = $("#especialidadesDoctor").val();
-                let request = "api/doctores/DoctoresEspecialidad/"+especialidadSeleccionada;
-                $.get(URLDoctores + request, function(data){
-                    let html = "";
-                    $(data).find("Doctor").each(function(){
-                        let apellido = $(this).find("Apellido").text();
-                        let especialidad = $(this).find("Especialidad").text();
-                        let idDoctor = $(this).find("IdDoctor").text();
-                        let idHospital = $(this).find("IdHospital").text();
-                        let salario = $(this).find("Salario").text();
-                        html += "<tr>";
-                        html += "<td>" + idDoctor + "</td>";
-                        html += "<td>" + apellido + "</td>";
-                        html += "<td>" + especialidad + "</td>";
-                        html += "<td>" + idHospital + "</td>";
-                        html += "<td>" + salario + "</td>";
-                        html += "</tr>";
-                    });
-                    $("#tablaEspecialidades tbody").html(html);
-                });
+                loadDoctores_Especialidades();
             });
 
             loadDoctores();
@@ -184,6 +161,44 @@
                 +"<Salario>"+salario+"</Salario>"
             +"</Doctor>";
             return dataXML;
+        }
+
+        function loadEspecialidades(){
+            let request = "api/doctores/especialidades";
+            $.get(URLDoctores + request, function(data){
+                console.log("Aqui entra.....");
+                $(data).find("string").each(function(){
+                    let especialidad = $(this).text();
+                    let opt = $("<option>",{
+                        "text": especialidad,
+                        "value": especialidad
+                    })
+                    $("#especialidadesDoctor").append(opt);
+                });
+            });
+        }
+
+        function loadDoctores_Especialidades(){
+            let especialidadSeleccionada = $("#especialidadesDoctor").val();
+            let request = "api/doctores/DoctoresEspecialidad/"+especialidadSeleccionada;
+            $.get(URLDoctores + request, function(data){
+                let html = "";
+                $(data).find("Doctor").each(function(){
+                    let apellido = $(this).find("Apellido").text();
+                    let especialidad = $(this).find("Especialidad").text();
+                    let idDoctor = $(this).find("IdDoctor").text();
+                    let idHospital = $(this).find("IdHospital").text();
+                    let salario = $(this).find("Salario").text();
+                    html += "<tr>";
+                    html += "<td>" + idDoctor + "</td>";
+                    html += "<td>" + apellido + "</td>";
+                    html += "<td>" + especialidad + "</td>";
+                    html += "<td>" + idHospital + "</td>";
+                    html += "<td>" + salario + "</td>";
+                    html += "</tr>";
+                });
+                $("#tablaEspecialidades tbody").html(html);
+            }); 
         }
 
         function loadDoctores(){
