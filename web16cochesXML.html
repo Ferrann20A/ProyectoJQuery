@@ -24,8 +24,7 @@
                     let idcoche = $(this).attr("idcoche");
                     let option = $("<option>",{
                         "text":marca + " " + modelo,
-                        "value":idcoche,
-                        "id":"coche"+idcoche
+                        "value":idcoche
                     });
                     // html += option;
                     $("#marcas").append(option);
@@ -39,7 +38,7 @@
                     let imgCoche = $(data).find("coche[idcoche="+idCocheSeleccionado+"]").find("imagen").text();
                     let modelo = $(data).find("coche[idcoche="+idCocheSeleccionado+"]").find("modelo").text();
                     let marca = $(data).find("coche[idcoche="+idCocheSeleccionado+"]").find("marca").text();
-                    html += "<h2>" + marca + " " + modelo + "</h2>";
+                    html += "<h2 style='color:blue'>" + marca + " " + modelo + "</h2>";
                     html += "<img src='"+imgCoche+"' alt='img coche'/>";
                     $("#contenedor").html(html);
                 });
