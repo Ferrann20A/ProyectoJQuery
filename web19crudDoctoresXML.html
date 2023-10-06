@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #tablaDoctores, #tablaEspecialidades, tr, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td{
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CRUD DEPARTAMENTOS XML</h1>
+    <div class="formGroup">
+        <label for="idDpt">Id Doctor</label>
+        <input type="text" name="idDpt" id="cajaId"/>
+    </div>
+    <br/>
+    <div class="formGroup">
+        <label for="nombreDpt">Apellido doctor</label>
+        <input type="text" name="nombreDpt" id="cajaApellido"/>
+    </div>
+    <br/>
+    <div class="formGroup">
+        <label for="localidadDpt">Especialidad</label>
+        <input type="text" name="localidadDpt" id="cajaEspecialidad"/>
+    </div>
+    <br/>
+    <div class="formGroup">
+        <label for="localidadDpt">Id Hospital</label>
+        <input type="text" name="localidadDpt" id="cajaIdHospital"/>
+    </div>
+    <br/>
+    <div class="formGroup">
+        <label for="localidadDpt">Salario</label>
+        <input type="text" name="localidadDpt" id="cajaSalario"/>
+    </div>
+    <hr/>
+    <button id="btnInsert">Insertar</button>
+    <button id="btnUpdate">Update</button>
+    <button id="btnDelete">Delete</button><br/>
+    <hr/>
+    <table id="tablaDoctores">
+        <thead>
+            <tr>
+                <th>IdDoctor</th>
+                <th>Apellido</th>
+                <th>Especialidad</th>
+                <th>Id Hospital</th>
+                <th>Salario</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <hr/>
+    <div id="especialidades">
+        <span>Especialidades</span>
+        <select id="especialidadesDoctor">
+
+        </select>
+    </div>
+    <br/>
+    <table id="tablaEspecialidades">
+        <thead>
+            <tr>
+                <th>IdDoctor</th>
+                <th>Apellido</th>
+                <th>Especialidad</th>
+                <th>Id Hospital</th>
+                <th>Salario</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        let URLDoctores = "https://apicruddoctoresxml.azurewebsites.net/";
+        $(document).ready(function(){
+            let request = "api/doctores/especialidades";
+            $.get(URLDoctores + request, function(data){
+                console.log("Aqui entra.....");
+                $(data).find("string").each(function(){
+                    let especialidad = $(this).text();
+                    let opt = $("<option>",{
+                        "text": especialidad,
+                        "value": especialidad
+                    })
+                    $("#especialidadesDoctor").append(opt);
+                });
+            });
+            $("#especialidadesDoctor").change(function(){
+                let especialidadSeleccionada = $("#especialidadesDoctor").val();
+                let request = "api/doctores/DoctoresEspecialidad/"+especialidadSeleccionada;
+                $.get(URLDoctores + request, function(data){
+                    let html = "";
+                    $(data).find("Doctor").each(function(){
+                        let apellido = $(this).find("Apellido").text();
+                        let especialidad = $(this).find("Especialidad").text();
+                        let idDoctor = $(this).find("IdDoctor").text();
+                        let idHospital = $(this).find("IdHospital").text();
+                        let salario = $(this).find("Salario").text();
+                        html += "<tr>";
+                        html += "<td>" + idDoctor + "</td>";
+                        html += "<td>" + apellido + "</td>";
+                        html += "<td>" + especialidad + "</td>";
+                        html += "<td>" + idHospital + "</td>";
+                        html += "<td>" + salario + "</td>";
+                        html += "</tr>";
+                    });
+                    $("#tablaEspecialidades tbody").html(html);
+                });
+            });
+
+            loadDoctores();
+            $("#btnInsert").click(function(){
+                let apellidoDoctor = $("#cajaApellido").val();
+                let especialidadDoctor = $("#cajaEspecialidad").val();
+                let idDoctor = $("#cajaId").val();
+                let idHospital = $("#cajaIdHospital").val();
+                let salarioDoctor = $("#cajaSalario").val();
+                let dataXML = getDoctorXML(apellidoDoctor,especialidadDoctor,idDoctor,idHospital,salarioDoctor);
+                let request = "api/doctores";
+                $.ajax({
+                    url: URLDoctores + request,
+                    type: "POST",
+                    contentType: "text/xml",
+                    data: dataXML,
+                    success: function(){
+                        console.log("Insertado correctamente");
+                        loadDoctores();
+                    }
+                })
+            });
+
+            $("#btnUpdate").click(function(){
+                let apellidoDoctor = $("#cajaApellido").val();
+                let especialidadDoctor = $("#cajaEspecialidad").val();
+                let idDoctor = $("#cajaId").val();
+                let idHospital = $("#cajaIdHospital").val();
+                let salarioDoctor = $("#cajaSalario").val();
+                let dataXML = getDoctorXML(apellidoDoctor,especialidadDoctor,idDoctor,idHospital,salarioDoctor);
+                let request = "api/doctores";
+                $.ajax({
+                    url: URLDoctores + request,
+                    type: "PUT",
+                    contentType: "text/xml",
+                    data: dataXML,
+                    success: function(){
+                        console.log("Modificacion realizada correctamente");
+                        loadDoctores();
+                    }
+                });
+            });
+
+            $("#btnDelete").click(function(){
+                let id = $("#cajaId").val();
+                let request = "api/doctores/"+id;
+                $.ajax({
+                    url: URLDoctores + request,
+                    type: "DELETE",
+                    success: function(){
+                        console.log("Eliminado correctamente");
+                        loadDoctores();
+                    }
+                })
+            });
+        });
+
+        function getDoctorXML(apellido, especialidad, idDoctor, idHospital, salario){
+            let dataXML =
+            "<Doctor>"
+                +"<Apellido>"+apellido+"</Apellido>"
+                +"<Especialidad>"+especialidad+"</Especialidad>"
+                +"<IdDoctor>"+idDoctor+"</IdDoctor>"
+                +"<IdHospital>"+idHospital+"</IdHospital>"
+                +"<Salario>"+salario+"</Salario>"
+            +"</Doctor>";
+            return dataXML;
+        }
+
+        function loadDoctores(){
+            let request = "api/doctores";
+            $.get(URLDoctores + request, function(data){
+                console.log("Leyendo servicio....");
+                let html = "";
+                $(data).find("Doctor").each(function(){
+                    let apellido = $(this).find("Apellido").text();
+                    let especialidad = $(this).find("Especialidad").text();
+                    let idDoctor = $(this).find("IdDoctor").text();
+                    let idHospital = $(this).find("IdHospital").text();
+                    let salario = $(this).find("Salario").text();
+                    html += "<tr>";
+                    html += "<td>" + idDoctor + "</td>";
+                    html += "<td>" + apellido + "</td>";
+                    html += "<td>" + especialidad + "</td>";
+                    html += "<td>" + idHospital + "</td>";
+                    html += "<td>" + salario + "</td>";
+                    html += "</tr>";
+                });
+                $("#tablaDoctores tbody").html(html);
+            });
+        }
+    </script>
+</body>
+</html>
