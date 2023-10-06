@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        button{
+            margin: 8px;
+            cursor: pointer;
+            background-color: transparent;
+            border: 2px solid black;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Clientes XML</h1>
+    <div id="contenedorBtnsClientes"></div>
+    <div id="infoCliente"></div>
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.get("documents/clientes.xml", function(data){
+                console.log("Leyendo clientes....");
+                $(data).find("CLIENTE").each(function(){
+                    let nombre = $(this).find("NOMBRE").text();
+                    let idcliente = $(this).attr("IDCLIENTE");
+                    let btn = $("<button>",{
+                        "text":nombre,
+                        "value":idcliente,
+                        "id":"cliente"+idcliente
+                    });
+                    $("#contenedorBtnsClientes").append(btn);
+
+                    $(btn).click(function(){
+                        let html = "";
+                        let idSeleccionado = btn.val();
+                        console.log(idSeleccionado);
+                        let filtro = "CLIENTE[IDCLIENTE="+idSeleccionado+"]";
+                        let imgCliente = $(data).find(filtro).find("IMAGENCLIENTE").text();
+                        let emailCliente = $(data).find(filtro).find("EMAIL").text();
+                        html += "<h1 style='color:blue'>" + nombre + "</h2>";
+                        html += "<h2 style='color:blue'>" + emailCliente + "</h2>";
+                        html += "<img src='" + imgCliente + "' alt='imgCliente'/>";
+                        $("#infoCliente").html(html);
+
+
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

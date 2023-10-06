@@ -17,7 +17,6 @@
     <script>
         $(document).ready(function(){
             $.get("documents/coches.xml", function(data){
-                // let html = "";
                 $(data).find("coche").each(function(){
                     let marca = $(this).find("marca").first().text();
                     let modelo = $(this).find("modelo").first().text();
@@ -26,7 +25,6 @@
                         "text":marca + " " + modelo,
                         "value":idcoche
                     });
-                    // html += option;
                     $("#marcas").append(option);
                 });
             });
