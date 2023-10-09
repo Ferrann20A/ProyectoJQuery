@@ -55,7 +55,7 @@
                 departamento.localidad = loc;
                 //Transformamos el objeto JS a formato JSON
                 let dataJSON = JSON.stringify(departamento);
-                console.log(dataJSON);
+                // console.log(dataJSON);
                 //Al ser una consulta de accion POST, debemos utilizar 
                 //$.ajax() e indicar contentType (lo que enviamos) y data (los datos)
                 let request = "api/departamentos";
@@ -72,9 +72,45 @@
             });
 
             $("#btnUpdate").click(function(){
-                
+                let id = parseInt($("#cajaId").val());
+                let nombre = $("#cajaNombre").val();
+                let loc = $("#cajaLoc").val();
+                let dataJson = getJSONDepartamento(id,nombre,loc);
+                let request = "api/departamentos";
+                $.ajax({
+                    url: URLDepartamentos + request,
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: dataJson,
+                    success: function(){
+                        console.log("Modificado correctamente");
+                        loadDepartamentos();
+                    }
+                })
+            });
+
+            $("#btnDelete").click(function(){
+                let id = $("#cajaId").val();
+                let request = "api/departamentos/" + id;
+                $.ajax({
+                    url: URLDepartamentos + request,
+                    type: "DELETE",
+                    success: function(){
+                        console.log("Eliminado correctamente");
+                        loadDepartamentos();
+                    }
+                })
             });
         });
+
+        function getJSONDepartamento(id, nombre, loc){
+            let departamento = new Object();
+            departamento.numero = id;
+            departamento.nombre = nombre;
+            departamento.localidad = loc;
+            let dataJSON = JSON.stringify(departamento);
+            return dataJSON;
+        } 
 
         function loadDepartamentos(){
             let request = "api/departamentos";
