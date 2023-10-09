@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #tablaDpt, tr, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td{
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CRUD Departamentos JSON</h1>
+    <label>Número</label>
+    <input type="text" id="cajaId"/><br/>
+    <label>Nombre</label>
+    <input type="text" id="cajaNombre"/><br/>
+    <label>Localidad</label>
+    <input type="text" id="cajaLoc"/><br/><br/>
+    <button id="btnInsert">Insertar</button>
+    <button id="btnUpdate">Update</button>
+    <button id="btnDelete">Delete</button><br/><br/>
+
+    <table id="tablaDpt">
+        <thead>
+            <tr>
+                <th>Id Departamento</th>
+                <th>Nombre</th>
+                <th>Localidad</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        let URLDepartamentos = "https://apicruddepartamentoscore.azurewebsites.net/";
+        $(document).ready(function(){
+            loadDepartamentos();
+
+            $("#btnInsert").click(function(){
+                let id = $("#cajaId").val();
+                let nombre = $("#cajaNombre").val();
+                let loc = $("#cajaLoc").val();
+                //Debemos crear un objeto JSON, para ello necesitamos un objetoen JavaScript
+                let departamento = new Object();
+                //Las propiedades son dinamicas, deben de coincidir con el servicio
+                departamento.numero = parseInt(id);
+                departamento.nombre = nombre;
+                departamento.localidad = loc;
+                //Transformamos el objeto JS a formato JSON
+                let dataJSON = JSON.stringify(departamento);
+                console.log(dataJSON);
+                //Al ser una consulta de accion POST, debemos utilizar 
+                //$.ajax() e indicar contentType (lo que enviamos) y data (los datos)
+                let request = "api/departamentos";
+                $.ajax({
+                    url: URLDepartamentos + request,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: dataJSON,
+                    success: function(){
+                        console.log("Insertado correctamente");
+                        loadDepartamentos();
+                    }
+                })
+            });
+
+            $("#btnUpdate").click(function(){
+                
+            });
+        });
+
+        function loadDepartamentos(){
+            let request = "api/departamentos";
+            $.getJSON(URLDepartamentos + request, function(data){
+                let html = "";
+                $.each(data, function(index, dpt){
+                    html += "<tr>";
+                    html += "<td>" + dpt.numero + "</td>";
+                    html += "<td>" + dpt.nombre + "</td>";
+                    html += "<td>" + dpt.localidad + "</td>";
+                    html += "<tr>";
+                })
+                $("#tablaDpt tbody").html(html);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Leyendo JSON Jugadores</h1>
+    <select id="jugadores"></select>
+    <div id="datosJugador"></div>
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.getJSON("documents/jugadores.json", function(data){
+                $.each(data.jugadores, function(index, jugador){
+                    let nombre = jugador.nombre;
+                    let opt = $("<option>",{
+                        "text": nombre,
+                        "value": index
+                    });
+                    $("#jugadores").append(opt);
+                })
+            });
+
+            $("#jugadores").change(function(){
+                $.ajax({
+                    url: "documents/jugadores.json",
+                    method: "GET",
+                    dataType: "json",
+                    success: function(data){
+                        console.log("Leyendo servicio");
+                        let html = "";
+                        let jugadorSeleccionado = $("#jugadores").val();
+                        let index = $("#jugadores").prop("selectedIndex");
+                        // console.log(index);
+                        // console.log(jugadorSeleccionado);
+                        let consumir = data.jugadores[jugadorSeleccionado];
+                        let nombre = consumir.nombre;
+                        let numero = consumir.numero;
+                        let posicion = consumir.posicion;
+                        let edad = consumir.edad;
+                        let img = consumir.imagen;
+                        html += "<h1 style='color:blue;'>" + nombre + "</h1>";
+                        html += "<h2>Número: " + numero + "</h2>";
+                        html += "<h2>Posición: " + posicion + "</h2>";
+                        html += "<h2>Edad: " + edad + "</h2>";
+                        html += "<img src='" + img + "' alt='imgJugador'/>";
+                        $("#datosJugador").html(html);
+                    },
+                    error: function(error){
+                        console.log("Error al leer el servicio");
+                    }
+                })
+            });
+        })
+    </script>
+</body>
+</html>
