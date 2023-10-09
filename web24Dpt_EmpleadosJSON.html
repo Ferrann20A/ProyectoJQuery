@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #tablaEmpleados, tr, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td{
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Empleados de cada departamento</h1>
+    <ul id="departamentos"></ul>
+
+    <table id="tablaEmpleados">
+        <thead>
+            <tr>
+                <th>Id Empleado</th>
+                <th>Apellido</th>
+                <th>Oficio</th>
+                <th>Salario</th>
+                <th>Nº Dpt</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="mensaje"></div>
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        let URLDepartamentos = "https://apicruddepartamentoscore.azurewebsites.net/";
+        let URLEmpleados = "https://apiempleadosspgs.azurewebsites.net/"
+        $(document).ready(function(){
+            loadDepartamentos();
+
+        });
+
+        function loadDepartamentos(){
+            let request = "api/departamentos";
+            $.getJSON(URLDepartamentos + request, function(data){
+                console.log("Leyendo servicio...");
+                $.each(data, function(index, dpt){
+                    let li = $("<li>", {
+                        "text":dpt.nombre
+                    });
+                    let btn = $("<button>", {
+                        "text":"Empleados",
+                        "value": dpt.numero
+                    });
+                    $("#departamentos").append(li);
+                    $(li).append(btn);
+
+                    btn.click(function(){
+                        let dptSeleccionado = parseInt($(this).val());
+                        let request = "api/Empleados/EmpleadosDepartamento/"+dptSeleccionado;
+                        $.getJSON(URLEmpleados + request, function(data){
+                            console.log("Leyendo otro servicio...");
+                            let html = "";
+                            $.each(data, function(index, empleado){
+                                html += "<tr>";
+                                html += "<td>" + empleado.idEmpleado + "</td>";
+                                html += "<td>" + empleado.apellido + "</td>";
+                                html += "<td>" + empleado.oficio + "</td>";
+                                html += "<td>" + empleado.salario + "</td>";
+                                html += "<td>" + empleado.departamento + "</td>";
+                                html += "</tr>";
+                            });
+                            $("#tablaEmpleados tbody").html(html);
+                        })
+                    });
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #tablaEmpleados, tr, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td{
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Oficios Empleados</h1>
+    <select id="oficios">
+        <option selected>OFICIOS</option>
+    </select>
+    <br/><br/>
+    <div id="datosEmpleado">
+        <table id="tablaEmpleados">
+            <thead>
+                <tr>
+                    <th>Id Empleado</th>
+                    <th>Apellido</th>
+                    <th>Oficio</th>
+                    <th>Salario</th>
+                    <th>Nº Director</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        let URLEmpleados = "https://apiempleadosaction.azurewebsites.net/";
+        $(document).ready(function(){
+            loadOficios();
+
+            $("#oficios").change(function(){
+                let oficioSeleccionado = $("#oficios").val();
+                // console.log(oficioSeleccionado);
+                let request = "api/empleados/GetEmpleadosOficio/empleadosoficio/"+oficioSeleccionado;
+                $.getJSON(URLEmpleados + request, function(data){
+                    console.log("Leyendo servicio...");
+                    let html = "";
+                    $.each(data, function(index, empleado){
+                        html += "<tr>";
+                        html += "<td>" + empleado.idEmpleado + "</td>";
+                        html += "<td>" + empleado.apellido + "</td>";
+                        html += "<td>" + empleado.oficio + "</td>";
+                        html += "<td>" + empleado.salario + "</td>";
+                        html += "<td>" + empleado.director + "</td>";
+                        html += "</tr>";
+                    });
+                    $("#tablaEmpleados tbody").html(html);
+                });
+            });
+        });
+
+        function loadOficios(){
+            let request = "api/empleados/GetOficios/oficios";
+            $.getJSON(URLEmpleados + request, function(data){
+                console.log("Leyendo servicio....");
+                $.each(data, function(index, oficio){
+                    let opt = $("<option>",{
+                        "text":oficio,
+                        "value":oficio
+                    });
+                    $("#oficios").append(opt);
+
+                });
+            });
+        }
+    </script>
+</body>
+</html>
