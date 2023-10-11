@@ -4,42 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        #tablaEmpleados, tr, th, td{
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-        th, td{
-            padding: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Oficios Empleados</h1>
-    <label>Incremento Salarial</label>
-    <input type="text" id="cajaIncremento"/>
-    <button id="btnIncrementa">Incrementar salario</button>
-    <br/><br/>
-    <select id="oficios">
-        <option selected>Oficios</option>
-    </select><br/>
-    <br/>
-    <div id="datosEmpleado">
-        <table id="tablaEmpleados">
-            <thead>
-                <tr>
-                    <th>Id Empleado</th>
-                    <th>Apellido</th>
-                    <th>Oficio</th>
-                    <th>Salario</th>
-                    <th>Nº Director</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+    <div class="container">
+        <h1>Oficios Empleados</h1>
+        <p class="">Incremento Salarial</p>
+        <input class="form-control" type="text" id="cajaIncremento"/><br/>
+        <button class="btn btn-success" id="btnIncrementa">Incrementar salario</button>
+        <br/><br/>
+        <select class="form-select form-select-sm mb-3" aria-label=".form-select-lg example" id="oficios">
+            <option selected>Oficios</option>
+        </select><br/>
+        <br/>
+        <div id="datosEmpleado">
+            <table class="table table-info table-hover" id="tablaEmpleados">
+                <thead>
+                    <tr>
+                        <th>Id Empleado</th>
+                        <th>Apellido</th>
+                        <th>Oficio</th>
+                        <th>Salario</th>
+                        <th>Nº Director</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 
     <script src="js/jquery-3.7.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
     <script>
         let URLEmpleados = "https://apiempleadosaction.azurewebsites.net/";
         $(document).ready(function(){
@@ -61,7 +56,7 @@
                     type: "PUT",
                     success: function(data){
                         console.log("Datos modificados correctamente");
-                        loadOficios();
+                        loadEmpleados(oficio);
                     }
                 })
             });

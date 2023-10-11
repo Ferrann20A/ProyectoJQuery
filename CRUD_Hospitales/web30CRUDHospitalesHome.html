@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/sweetAlert.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">HopitalesCoreCRUD</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-primary" aria-current="page" href="web30CRUDHospitalesHome.html">Home
+                            Hospitales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-success" href="web30CRUDHospitalesNuevoHosp.html">Nuevo Hospital</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br />
+    <div class="container">
+        <h2>Lista de Hospitales</h2>
+        <br />
+        <table class="table table-info table-hover" id="tablaHospitales">
+            <thead>
+                <tr>
+                    <th>Id Hospital</th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Nº Camas</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/sweetAlert.js"></script>
+    <script>
+        let URLHospitales = "https://apicrudhospital.azurewebsites.net/";
+        $(document).ready(function () {
+            let request = "webresources/hospitales";
+            $.ajax({
+                url: URLHospitales + request,
+                type: "GET",
+                success: function (data) {
+                    console.log("leyendo servicio...");
+                    let html = "";
+                    $.each(data, function (index, hospital) {
+                        let btnDelete = $("<button>", {
+                            "text": "Eliminar",
+                            "class": "btn btn-danger",
+                            "id": "btnDelete"
+                        });
+                        // console.log(btnDelete);
+                        html += "<tr>";
+                        html += `<td>${hospital.idhospital}</td>`;
+                        html += `<td>${hospital.nombre}</td>`;
+                        html += `<td>${hospital.direccion}</td>`;
+                        html += `<td>${hospital.telefono}</td>`;
+                        html += `<td>${hospital.camas}</td>`;
+                        html += `<td><a href='web30CRUDHospitalesEditHosp.html?id=${hospital.idhospital}&nombre=${hospital.nombre}&direccion=${hospital.direccion}&telefono=${hospital.telefono}&camas=${hospital.camas}' class='btn btn-primary' id='linkEditar'>Editar</a><button class="btn btn-danger" onclick="eliminaHospital(${hospital.idhospital})">Eliminar</button></td>`;
+                        html += "</tr>";
+                    });
+                    $("#tablaHospitales tbody").html(html);
+                }
+            });
+        });
+
+        function eliminaHospital(id) {
+            Swal.fire({
+                title: '¿Estás Seguro?',
+                text: "Si borras un hospital no podrás recuperarlo",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `https://apicrudhospital.azurewebsites.net/webresources/hospitales/delete/${id}`,
+                        type: "DELETE",
+                        success: function () {
+                            Swal.fire(
+                                'Borrado!',
+                                'Tu hospital ha sido Borrado.',
+                                'success'
+                            ).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function (error) {
+                            console.log("Error al eliminar el hospital: " + error);
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

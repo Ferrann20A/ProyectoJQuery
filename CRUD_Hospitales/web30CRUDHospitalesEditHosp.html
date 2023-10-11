@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">HopitalesCoreCRUD</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-primary" aria-current="page" href="web30CRUDHospitalesHome.html">Home
+                            Hospitales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-success" href="web30CRUDHospitalesNuevoHosp.html">Nuevo Hospital</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br/>
+    <div class="container">
+        <h1>Modificar Hospital</h1>
+        <label class="form-label">Id Hospital</label>
+        <input type="text" id="cajaId" class="form-control" disabled>
+        <label class="form-label">Nombre</label>
+        <input type="text" id="cajaNombre" class="form-control">
+        <label class="form-label">Dirección</label>
+        <input type="text" id="cajaDireccion" class="form-control">
+        <label class="form-label">Teléfono</label>
+        <input type="text" id="cajaTelefono" class="form-control">
+        <label class="form-label">Camas</label>
+        <input type="text" id="cajaCamas" class="form-control">
+        <br/>
+        <button class="btn btn-dark" id="modificarHospital">Modificar Hospital</button>
+    </div>
+
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+        let URLHospitales = "https://apicrudhospital.azurewebsites.net/";
+        $(document).ready(function(){
+            let params = new URLSearchParams(location.search);
+            let id = params.get("id");
+            let nombre = params.get("nombre");
+            let direccion = params.get("direccion");
+            let telefono = params.get("telefono");
+            let camas = params.get("camas");
+            // console.log(params);
+            $("#cajaId").val(id);
+            $("#cajaNombre").val(nombre);
+            $("#cajaDireccion").val(direccion);
+            $("#cajaTelefono").val(telefono);
+            $("#cajaCamas").val(camas);
+
+            $("#modificarHospital").click(function(){
+                let idcaja = parseInt($("#cajaId").val());
+                let nombrecaja = $("#cajaNombre").val();
+                let direccioncaja = $("#cajaDireccion").val();
+                let telefonocaja = $("#cajaTelefono").val();
+                let camascaja = parseInt($("#cajaCamas").val());
+                console.log(idcaja);
+                console.log(nombrecaja);
+                console.log(direccioncaja);
+                console.log(telefonocaja);
+                console.log(camascaja);
+                let dataJSON = getHospitalJSON(idcaja,nombrecaja,direccioncaja,telefonocaja,camascaja);
+                let request = "webresources/hospitales/put";
+                $.ajax({
+                    url: URLHospitales + request,
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: dataJSON,
+                    success: function(){
+                        console.log("Hospital modificado correctamente");
+                        $(location).attr('href','web30CRUDHospitalesHome.html');
+                    }
+                });
+
+            });
+
+        });
+        function getHospitalJSON(id, nombre, direccion, telefono, camas){
+            let hospital = new Object();
+            hospital.idhospital = id;
+            hospital.nombre = nombre;
+            hospital.direccion = direccion;
+            hospital.telefono = telefono;
+            hospital.camas = camas;
+            let dataJSON = JSON.stringify(hospital);
+            return dataJSON;
+        }
+    </script>
+</body>
+</html>

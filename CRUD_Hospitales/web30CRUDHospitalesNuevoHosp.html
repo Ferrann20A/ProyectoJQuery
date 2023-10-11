@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">HopitalesCoreCRUD</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-primary" aria-current="page" href="web30CRUDHospitalesHome.html">Home
+                            Hospitales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-success" href="web30CRUDHospitalesNuevoHosp.html">Nuevo Hospital</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Nuevo Hospital</h1>
+        <label class="form-label">Id Hospital</label>
+        <input type="text" id="cajaId" class="form-control">
+        <label class="form-label">Nombre</label>
+        <input type="text" id="cajaNombre" class="form-control">
+        <label class="form-label">Dirección</label>
+        <input type="text" id="cajaDireccion" class="form-control">
+        <label class="form-label">Teléfono</label>
+        <input type="text" id="cajaTelefono" class="form-control">
+        <label class="form-label">Camas</label>
+        <input type="text" id="cajaCamas" class="form-control">
+        <br/>
+        <button class="btn btn-dark" id="insertaHospital">Insertar Hospital</button>
+    </div>
+    
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            let URLHospitales = "https://apicrudhospital.azurewebsites.net/";
+            $("#insertaHospital").click(function(){
+                let id = parseInt($("#cajaId").val());
+                let nombre = $("#cajaNombre").val();
+                let direccion = $("#cajaDireccion").val();
+                let telefono = $("#cajaTelefono").val();
+                let camas = parseInt($("#cajaCamas").val());
+                let hospital = new Object();
+                hospital.idhospital = id;
+                hospital.nombre = nombre;
+                hospital.direccion = direccion;
+                hospital.telefono = telefono;
+                hospital.camas = camas;
+                let dataJSON = JSON.stringify(hospital);
+                let request = "webresources/hospitales/post";
+                $.ajax({
+                    url: URLHospitales + request,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: dataJSON,
+                    success: function(){
+                        console.log("Insertado correctamente");
+                        $(location).attr('href','web30CRUDHospitalesHome.html');
+                    }
+                })
+            });
+        });
+    </script>
+</body>
+</html>
